@@ -1,0 +1,28 @@
+name: Build Windows App
+on: [push]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          
+      - name: Enable Windows Support
+        run: flutter config --enable-windows-desktop
+        
+      - name: Get Dependencies
+        run: flutter pub get
+        
+      - name: Build EXE
+        run: flutter build windows --release
+        
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-release-app
+          path: build/windows/runner/Release/
